@@ -5,7 +5,7 @@ import struct
 import time
 
 
-class Serial(Object):
+class Serial:
     def __init__(self):
         self.connection = serial.Serial(
             port = '/dev/ttyAMA0',
@@ -34,7 +34,7 @@ class Serial(Object):
             retry += 1
 
 
-class SerialCommand(Object):
+class SerialCommand:
     def __init__(self, name, *args):
         self.token = name[0]
         self.name = name
