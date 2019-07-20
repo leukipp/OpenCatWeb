@@ -112,13 +112,13 @@ Commands for calibration (c, s, a) are not implemented for safety reasons.
 With this simple web application you are able to control each servo separately, or together if you check the checkbox on the left.
 Use it with caution!
 
->They are two experimental features that are not working satisfying at the moment because of limitation in the serial communication.
->- Auto update (experimental)
->  - If checked, updates from another open window or movements from IR remote will be reflected here
->- Lazy update (experimental)
->  - If unchecked, updates will occur immediately during slider moving 
+They are two experimental features that are not working satisfying at the moment because of limitation in the serial communication.
+- Auto update (experimental)
+  - If checked, updates from another open window or movements from IR remote will be reflected here
+- Lazy update (experimental)
+  - If unchecked, updates will occur immediately during slider movements 
 
->At the bottom you can send direct commands like `ksit` followed by the enter key.
+At the bottom you can send direct commands like `ksit` followed by the enter key.
 
 If you want to create your own application you can use the `ocw.api.js` library.
 Every method returns a promise object.
