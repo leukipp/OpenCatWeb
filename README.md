@@ -18,14 +18,14 @@ The following steps are for Raspberry Pi with Raspbian, but the code will also w
 ### Software
 - Working SSH or VNC access on Raspberry Pi
 - Working NyBoard serial communication on Raspberry Pi
-  - Check that [ardSerial.py](https://github.com/PetoiCamp/OpenCat/blob/master/SerialMasterPython/debuglog.txt) is working on terminal
-
+  - Follow the chapter "Raspberry Pi serial port as interface" in [OpenCat documentation](https://github.com/PetoiCamp/OpenCat/blob/master/Resources/AssemblingInstructions.pdf) 
+  
 
 ## Installation
 ### Dependencies
 OpenCatWeb uses `Flask` as Python Web Server Gateway Interface (WSGI).
 
-    sudo pip install git
+    pip install Flask
 
 That's it, now we need the source code of OpenCatWeb.
 
@@ -49,13 +49,14 @@ You should now have the folder `/home/pi/Projects/OpenCatWeb`.
 Start the webserver at port `8080`.
 
     cd OpenCatWeb
+    chmod +x bus.py app.py
     ./app.py
 
 Open the web browser on another device in the same network and enter `http://<IP_OF_YOUR_RASPBERRY_PI>:8080/`.
 
 You should see the welcome screen (more in **Usage**)
-- /web/
-- /api/
+>- /web/
+>- /api/
 
  _You can modify the webserver settings at `HOST = '0.0.0.0'` and `PORT = 8080` in `app.py` to your requirements._
 _Don't change and leave `DEBUG = true`, your server won't boot up with auto start._
@@ -63,6 +64,7 @@ _Don't change and leave `DEBUG = true`, your server won't boot up with auto star
 ### Auto start on boot
 _You can change the folder structure for auto start at `DAEMON=/home/pi/Projects/OpenCatWeb/app.py` in `ocw.sh` to your requirements._
 
+    chmod +x ocw.sh 
     sudo cp ocw.sh /etc/init.d/
     sudo update-rc.d ocw.sh defaults
 
@@ -70,32 +72,32 @@ Reboot and check if everything is running on startup.
 
 
 ## Usage
-The documentation of available commands is on the webserver and in the [OpenCat documentation](https://github.com/PetoiCamp/OpenCat/blob/master/Resources/AssemblingInstructions.pdf).
+The documentation of available commands is on the webserver and in the chapter "Arduino IDE as interface" in [OpenCat documentation](https://github.com/PetoiCamp/OpenCat/blob/master/Resources/AssemblingInstructions.pdf).
 
 ### API
-![Screenshot](https://github.com/leukipp/OpenCatWeb/blob/master/web/img/api.jpg?raw=true)
+![Screenshot](https://github.com/leukipp/OpenCatWeb/blob/master/web/img/api.png?raw=true)
 
 I have decided to use `GET` for several reasons, most of them because of simplicity.
 You don't have to use any special software to control your robot.
 A hand full of simple browser bookmark's are already enough to do anything!
 
 >You can navigate through all API path's until you reach the end.
->* /web/
->* /api/
->  * command/\<string:name\>
->  * communicate/
->    * u/\<int:repeat\>/\<int:tempo\>
->    * b/\<int:note>/\<int:duration\>
->  * move/
->      * m/\<int:index\>/\<int:value\>
->      * i/\<int:index\>/\<int:value\>/\<int:index\>/\<int:value\>/...
->      * l/\<int:valueofindex0>/.../\<int:valueofindex15\>
->  * stop/
->      * d
->      * p
->      * r
->  * status/
->      * j
+>- /web/
+>- /api/
+>  - command/\<string:name\>
+>  - communicate/
+>    - u/\<int:repeat\>/\<int:tempo\>
+>    - b/\<int:note>/\<int:duration\>
+>  - move/
+>      - m/\<int:index\>/\<int:value\>
+>      - i/\<int:index\>/\<int:value\>/\<int:index\>/\<int:value\>/...
+>      - l/\<int:valueofindex0>/.../\<int:valueofindex15\>
+>  - stop/
+>      - d
+>      - p
+>      - r
+>  - status/
+>      - j
 
 For every `GET` request on the bottom of the list you will get a `application/json` response. For all others you will get a `text/html` response.
 The API response contains the parsed response from the serial command.
@@ -105,16 +107,16 @@ At the moment only u, b, m and j commands are returning values.
 Commands for calibration (c, s, a) are not implemented for safety reasons. 
 
 ### WEB
-![Screenshot](https://github.com/leukipp/OpenCatWeb/blob/master/web/img/web.jpg?raw=true)
+![Screenshot](https://github.com/leukipp/OpenCatWeb/blob/master/web/img/web.png?raw=true)
 
 With this simple web application you are able to control each servo separately, or together if you check the checkbox on the left.
 Use it with caution!
 
 >They are two experimental features that are not working satisfying at the moment because of limitation in the serial communication.
 >- Auto update (experimental)
->  - If checked updates from another open window or movements from IR remote will be reflected here
+>  - If checked, updates from another open window or movements from IR remote will be reflected here
 >- Lazy update (experimental)
->  - If unchecked updates will occur immediately during slider moving 
+>  - If unchecked, updates will occur immediately during slider moving 
 
 >At the bottom you can send direct commands like `ksit` followed by the enter key.
 
