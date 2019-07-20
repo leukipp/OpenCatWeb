@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>OpenCatWeb</title>
+    <link rel="icon" type="image/png" href="img/favicon.png" />
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/vue.slider.css" />
+    <link rel="stylesheet" href="css/ocw.main.css" />
+</head>
+<body>
+<div id="app">
+    <div id="settings">
+        <div class="setting">
+            <input id="autoupdate" type="checkbox" ref="autoUpdate" v-model="autoUpdate" />
+            <label for="autoupdate">Auto update (experimental)</label>
+        </div>
+        <div class="setting">
+            <input id="lazyupdate" type="checkbox" ref="lazyUpdate" v-model="lazyUpdate" @change="lazyUpdateChange($event)" />
+            <label for="lazyupdate">Lazy update (experimental)</label>
+        </div>
+    </div>
+    <div id="sliders">
+        <div :id="'m' + slider.id" :class="slider.style" v-for="slider in sliders">
+            <div class="sync">
+                <input :id="'s' + slider.id" type="checkbox" v-model="$data['b' + slider.id]['sync']" />
+                <label :for="'s' + slider.id">{{ slider.name }}</label>
+            </div>
+            <vue-slider
+                    :ref="'m' + slider.id"
+                    v-bind="$data['b' + slider.id]"
+                    v-model="$data['m' + slider.id]"
+                    @change="change(slider.id)"
+                    @drag-start="dragstart(slider.id)"
+                    @drag-end="dragend(slider.id)">
+            </vue-slider>
+        </div>
+    </div>
+    <div id="commands">
+        <input class="command" type="input" placeholder="Send command..." ref="command" v-model="command" v-on:keyup.enter="commandWrite" />
+    </div>
+</div>
+<script src="js/jquery.min.js"></script>
+<script src="js/vue.min.js"></script>
+<script src="js/vue.slider.min.js"></script>
+<script src="js/ocw.log.js"></script>
+<script src="js/ocw.api.js"></script>
+<script src="js/ocw.main.js"></script>
+</body>
+</html>
