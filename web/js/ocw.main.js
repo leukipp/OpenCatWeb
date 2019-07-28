@@ -203,7 +203,7 @@ j.readStatus().done((status) => {
                 }
             };
             m.forEach((item) => {
-                let slider = data.sliders[item.getIndex()];
+                let slider = data.sliders.filter(s => s.id == item.getIndex())[0];
                 data['m' + item.getIndex()] = item.getValue();
                 data['b' + item.getIndex()] = $.extend(slider, {
                         dotSize: 20,
@@ -217,6 +217,9 @@ j.readStatus().done((status) => {
                         sync: false
                     },
                     {
+                        sid: 's' + item.getIndex(),
+                        mid: 'm' + item.getIndex(),
+                        bid: 'b' + item.getIndex(),
                         style: 'slider ' + slider.direction + ' ' + ([3, 4, 5, 6, 7].includes(slider.id) ? 'inactive' : 'active'),
                         width: ['ltr', 'rtl'].includes(slider.direction) ? 300 : 5,
                         height: ['ttb', 'btt'].includes(slider.direction) ? 300 : 5,
@@ -230,55 +233,4 @@ j.readStatus().done((status) => {
         }
     });
     vue.$data.autoUpdateRate(1000);
-
-    /*
-	api.command('ksit').done((data) => {
-		log.debug(data);
-	});
-	*/
-    /*
-	api.communicate.u(1, 100).done((data) => {
-		log.debug(data);
-	});
-	*/
-    /*
-	api.communicate.b(6, 100).done((data) => {
-		log.debug(data);
-	});
-	*/
-    /*
-	api.move.m(1, 30).done((data) => {
-		log.debug(data);
-	});
-	*/
-    /*
-	api.move.i(1, 20, 0, 20).done((data) => {
-		log.debug(data);
-	});
-	*/
-    /*
-	api.move.l(10, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0).done((data) => {
-		log.debug(data);
-	});
-	*/
-    /*
-	api.stop.d().done((data) => {
-		log.debug(data);
-	});
-	*/
-    /*
-	api.stop.p().done((data) => {
-		log.debug(data);
-	});
-	*/
-    /*
-	api.stop.r().done((data) => {
-		log.debug(data);
-	});
-	*/
-    /*
-	api.status.j().done((data) => {
-		log.debug(data);
-	});
-	*/
 });
