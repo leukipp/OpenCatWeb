@@ -1,12 +1,14 @@
 #!/usr/bin/python
 
 import serial
+import threading
 import struct
 import time
 
 
 class Serial:
     def __init__(self):
+        self.lock = threading.Lock()
         self.connection = serial.Serial(
             port = '/dev/ttyAMA0',
             baudrate = 57600,
@@ -17,9 +19,10 @@ class Serial:
         )
 
     def write(self, command):
-        print('-> %s' % str(command))
-        self.connection.write(str(command))
-        return self.read() if command.replies() else None
+        with self.lock:
+            print('-> %s' % str(command))
+            self.connection.write(str(command))
+            return self.read() if command.replies() else time.sleep(0.05)
 
     def read(self):
         retry = 0
@@ -30,7 +33,7 @@ class Serial:
                 if '\t' in line:
                     print(line)
                     return line.split('\t')
-            time.sleep(0.01)
+            time.sleep(0.05)
             retry += 1
 
 
@@ -47,4 +50,4 @@ class SerialCommand:
             return self.name + ' '.join(list(map(str, self.args)))
 
     def replies(self):
-        return self.token in ['u', 'b', 'm', 'j']
+        return self.token in ['j']
