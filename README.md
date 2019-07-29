@@ -1,11 +1,14 @@
-# OpenCatWeb (v0.1)
+# OpenCatWeb (v0.2)
 > Web API for Petoi OpenCat Robotics
 
 This is an extension for Petoi OpenCat robotic kittens.
-It offers a local running Web API for `GET` requests and `JSON` responses.
+It offers a local running Web API for `GET` requests with `JSON` responses.
 
-There is also a simple web application included for controlling servo positions and sending direct commands to the robot.
-
+There is also a simple web application with the following features included.
+- Control individual servo positions
+- Control walking mode with virtual joysticks
+- Send commands by predefined buttons (like on IR remote control)
+- Send individual commands by text (like on serial terminal)
 
 ## Requirements
 ### Hardware
@@ -18,7 +21,7 @@ The following steps are for Raspberry Pi with Raspbian, but the code will also w
 ### Software
 - Working SSH or VNC access on Raspberry Pi
 - Working NyBoard serial communication on Raspberry Pi
-  - Follow the chapter "Raspberry Pi serial port as interface" in [OpenCat documentation](https://github.com/PetoiCamp/OpenCat/blob/master/Resources/AssemblingInstructions.pdf) 
+  - Follow the chapter **"Raspberry Pi serial port as interface"** in [OpenCat documentation](https://github.com/PetoiCamp/OpenCat/blob/master/Resources/AssemblingInstructions.pdf) 
   
 
 ## Installation
@@ -72,14 +75,15 @@ Reboot and check if everything is running on startup.
 
 
 ## Usage
-The documentation of available commands is on the webserver and in the chapter "Arduino IDE as interface" in [OpenCat documentation](https://github.com/PetoiCamp/OpenCat/blob/master/Resources/AssemblingInstructions.pdf).
+The documentation of available commands is on the webserver and
+in the chapter **"Arduino IDE as interface"** in [OpenCat documentation](https://github.com/PetoiCamp/OpenCat/blob/master/Resources/AssemblingInstructions.pdf).
 
 ### API
-![Screenshot](https://github.com/leukipp/OpenCatWeb/blob/master/web/img/api.png?raw=true)
+![Screenshot](https://github.com/leukipp/OpenCatWeb/blob/master/web/img/api.gif?raw=true)
 
 I have decided to use `GET` for several reasons, most of them because of simplicity.
 You don't have to use any special software to control your robot.
-A hand full of simple browser bookmark's are already enough to do anything!
+A simple browser bookmark is enough to do anything!
 
 >You can navigate through all API path's until you reach the end.
 >- /web/
@@ -100,39 +104,42 @@ A hand full of simple browser bookmark's are already enough to do anything!
 >      - j
 
 For every `GET` request on the bottom of the list you will get a `application/json` response. For all others you will get a `text/html` response.
-The API response contains the parsed response from the serial command.
-
-At the moment only u, b, m and j commands are returning values.
+For status commands the API response contains the parsed text from the serial output.
 
 Commands for calibration (c, s, a) are not implemented for safety reasons. 
 
 ### WEB
-![Screenshot](https://github.com/leukipp/OpenCatWeb/blob/master/web/img/web.png?raw=true)
+![Screenshot](https://github.com/leukipp/OpenCatWeb/blob/master/web/img/web.gif?raw=true)
 
-With this simple web application you are able to control each servo separately, or together if you check the checkbox on the left.
-Use it with caution!
+On the first page you are able to send predefined commands by clicking the individual buttons.
+At the bottom you have two joystick's, the left one is for walking and the right one for head movements.
 
-They are two experimental features that are not working satisfying at the moment because of limitation in the serial communication.
-- Auto update (experimental)
-  - If checked, updates from another open window or movements from IR remote will be reflected here
-- Lazy update (experimental)
+On the second page you are able to control each servo separately or together if you check the checkbox on the left.
+At the bottom you can send direct commands followed by the enter key.
+
+They are some experimental features that are not working satisfying at the moment because of limitation in the serial communication.
+- Head joystick
+  - Positions are changing only during movement and to much movement causes the head to twist
+- Auto update
+  - If checked, updates from another page or movements from IR remote will be reflected here
+- Lazy update
   - If unchecked, updates will occur immediately during slider movements 
 
-At the bottom you can send direct commands like `ksit` followed by the enter key.
 
+#### Library
 If you want to create your own application you can use the `ocw.api.js` library.
-Every method returns a promise object.
+Every method returns a jQuery promise object.
 ``` js
 let api = ocw.Api();
 api.command('ksit').done((data) => {
     log.debug(data);
 });
 ```
-The library is not final and at the moment there is no further documentation about this.
-Just check the code in `ocw.main.js` for examples.
+The library is not final and there is no further documentation about this.
+For examples just check the code in `ocw.main.js`.
 
 ### Examples (Nybble)
-You can use your `web browser`, `wget` on terminal or any other `custom script` you want to make the request.
+You can use your `web browser`, `wget` or any other `script` to make the request.
 
 Meow twice:
 
@@ -150,7 +157,7 @@ Stand up:
 
     http://<IP_OF_YOUR_RASPBERRY_PI>:8080/api/command/kbalance
    
-With the `/api/command/` you can send any command you like, also custom one's for new instincts.
+With the `/api/command/` you can send any command you like, also custom one's.
 
 
 ## Known Issues
@@ -159,11 +166,19 @@ With the `/api/command/` you can send any command you like, also custom one's fo
   - No upper/lower bound value validations (know what you send)
 - WEB
   - Moving multiple sliders at once breaks minimum/maximum limits
+  - Moving head joystick is not working properly
   - Experimental functions are lagging in time
-  - Source code is unfinished and uncommented
+  - Source code is uncommented
 
 
 ## Changelog
+> v0.2 - 2019-07-29
+- API
+  - Improve multiple request's behavior
+- WEB
+  - Add navigation menu
+  - Add command buttons
+  - Add joystick control
 > v0.1 - 2019-07-20
 - Initial release
 
