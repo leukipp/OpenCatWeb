@@ -13,21 +13,21 @@
 <body>
 <div id="app">
     <nav id="menu">
-      <input id="menu-open" type="checkbox" ref="menuOpen" v-model="menuOpen" />
-      <label class="menu-open-button" for="menu-open">
-        <span class="menu-line line-1"></span>
-        <span class="menu-line line-2"></span>
-        <span class="menu-line line-3"></span>
-      </label>
-      <a class="menu-item item-1" v-on:click="menuOpenPage($event)">
-        <i class="fas fa-cat"></i>
-      </a>
-      <a class="menu-item item-2" v-on:click="menuOpenPage($event)">
-        <i class="fas fa-paw"></i>
-      </a>
-      <a class="menu-item item-3" v-on:click="menuOpenPage($event)">
-        <i class="fas fa-ellipsis-h"></i>
-      </a>
+        <input id="menu-open" type="checkbox" ref="menuOpen" v-model="menuOpen" />
+        <label class="menu-open-button" for="menu-open">
+            <span class="menu-line line-1"></span>
+            <span class="menu-line line-2"></span>
+            <span class="menu-line line-3"></span>
+        </label>
+        <a class="menu-item item-1" v-on:click="menuOpenPage($event)">
+            <i class="fas fa-cat"></i>
+        </a>
+        <a class="menu-item item-2" v-on:click="menuOpenPage($event)">
+            <i class="fas fa-paw"></i>
+        </a>
+        <a class="menu-item item-3" v-on:click="menuOpenPage($event)">
+            <i class="fas fa-ellipsis-h"></i>
+        </a>
     </nav>
     <div id="page-1" class="page" style="display: none;" v-show="page == 1">
         <div id="status"></div>

@@ -6,7 +6,7 @@ let api = ocw.Api();
 let j = ocw.status.J();
 j.readStatus().done((status) => {
     let m = status.map((value, index) => ocw.move.M(index, value));
-    
+
     let vue = new Vue({
         el: '#app',
         data: () => {
@@ -18,10 +18,10 @@ j.readStatus().done((status) => {
                     vue.$data.menuOpen = false;
                 },
                 buttonCommand: (e) => {
-                    ocw.Command(($(e.target).closest('.button').attr('id'))).writeCommand();                                       
+                    ocw.Command(($(e.target).closest('.button').attr('id'))).writeCommand();
                 },
                 actionCommand: (e) => {
-                    ocw.Command(($(e.target).closest('.action').attr('id'))).writeCommand();                                       
+                    ocw.Command(($(e.target).closest('.action').attr('id'))).writeCommand();
                 },
                 lazyUpdate: true,
                 lazyUpdateChange: () => {
@@ -57,7 +57,7 @@ j.readStatus().done((status) => {
                     {
                         name: 'Sit',
                         command: 'ksit'
-                    },                    
+                    },
                     {
                         name: 'Stand',
                         command: 'kbalance'
@@ -209,7 +209,7 @@ j.readStatus().done((status) => {
                     vue.$set(vue.$refs.autoUpdate, 'checked', $(vue.$refs.autoUpdate).data('checked'));
                 }
             };
-            
+
             m.forEach((item) => {
                 let slider = data.sliders.filter(s => s.id == item.getIndex())[0];
                 data['m' + item.getIndex()] = item.getValue();
@@ -234,14 +234,14 @@ j.readStatus().done((status) => {
                         process: (p) => [[(Math.abs(slider.min) * 100 / (Math.abs(slider.min) + Math.abs(slider.max))), p[0]]]
                     });
             });
-            
+
             return data;
         },
         components: {
             'vueSlider': window['vue-slider-component'],
         }
     });
-    
+
     vue.$data.autoUpdateRate(1000);
 
     let joystick = {
@@ -252,75 +252,75 @@ j.readStatus().done((status) => {
             top: '50%'
         }
     };
-    
+
     let c = ocw.Command();
     nipplejs.create($.extend(joystick, {
         zone: $('#left')[0],
         color: '#007acc'
     })).on('move, end', (e, data) => {
-            let cActive = c.getCommand();
-            let direction = data.direction ? data.direction.y + '|' + data.direction.angle : 'stop';
-            switch (direction) {
-                case 'up|up':
-                        c.setCommand('ktr');
-                        break;
-                case 'up|left':
-                        c.setCommand('kwkL');
-                        break;
-                case 'up|right':
-                        c.setCommand('kwkR');
-                        break;
-                case 'down|down':
-                        c.setCommand('kbk');
-                        break;
-                case 'down|left':
-                        c.setCommand('kbkL');
-                        break;
-                case 'down|right':
-                        c.setCommand('kbkR');
-                        break;
-                default:
-                        c.setCommand('kbalance');
-                        break;
-            }
-            if (c.getCommand() != cActive) {
-                c.writeCommand();
-            }
+        let cActive = c.getCommand();
+        let direction = data.direction ? data.direction.y + '|' + data.direction.angle : 'stop';
+        switch (direction) {
+            case 'up|up':
+                c.setCommand('ktr');
+                break;
+            case 'up|left':
+                c.setCommand('kwkL');
+                break;
+            case 'up|right':
+                c.setCommand('kwkR');
+                break;
+            case 'down|down':
+                c.setCommand('kbk');
+                break;
+            case 'down|left':
+                c.setCommand('kbkL');
+                break;
+            case 'down|right':
+                c.setCommand('kbkR');
+                break;
+            default:
+                c.setCommand('kbalance');
+                break;
+        }
+        if (c.getCommand() != cActive) {
+            c.writeCommand();
+        }
     });
-        
+
     let i = ocw.move.I(0, m[0].getValue(), 1, m[1].getValue());
     nipplejs.create($.extend(joystick, {
         zone: $('#right')[0],
         color: '#f0b400'
     })).on('dir:up, dir:down, dir:left, dir:right, move, end', (e, data) => {
-            let iActive = i.getIndexValue();
-            let step = parseInt(0.5 * (data.force ? data.force + 1 : 1));
-            let direction = data.direction ? data.direction.y + '|' + data.direction.angle : 'stop';
-            switch (direction) {
-                case 'up|up':
-                        i.setIndexValue(0, iActive[1], 1, iActive[3] + step);
-                        break;
-                case 'up|left':
-                        i.setIndexValue(0, iActive[1] + step, 1, iActive[3] + step);
-                        break;
-                case 'up|right':
-                        i.setIndexValue(0, iActive[1] - step, 1, iActive[3] + step);
-                        break;
-                case 'down|down':
-                        i.setIndexValue(0, iActive[1], 1, iActive[3] - step);
-                        break;
-                case 'down|left':
-                        i.setIndexValue(0, iActive[1] + step, 1, iActive[3] - step);
-                        break;
-                case 'down|right':
-                        i.setIndexValue(0, iActive[1] - step, 1, iActive[3] - step);
-                        break;
-                default:
-                        i.setIndexValue(0, iActive[1], 1, iActive[3]);
-                        break;
-            }
-            if (JSON.stringify(i.getIndexValue()) != JSON.stringify(iActive)) {
-                i.writeIndexValue();
-            }
+        let iActive = i.getIndexValue();
+        let step = parseInt(0.5 * (data.force ? data.force + 1 : 1));
+        let direction = data.direction ? data.direction.y + '|' + data.direction.angle : 'stop';
+        switch (direction) {
+            case 'up|up':
+                i.setIndexValue(0, iActive[1], 1, iActive[3] + step);
+                break;
+            case 'up|left':
+                i.setIndexValue(0, iActive[1] + step, 1, iActive[3] + step);
+                break;
+            case 'up|right':
+                i.setIndexValue(0, iActive[1] - step, 1, iActive[3] + step);
+                break;
+            case 'down|down':
+                i.setIndexValue(0, iActive[1], 1, iActive[3] - step);
+                break;
+            case 'down|left':
+                i.setIndexValue(0, iActive[1] + step, 1, iActive[3] - step);
+                break;
+            case 'down|right':
+                i.setIndexValue(0, iActive[1] - step, 1, iActive[3] - step);
+                break;
+            default:
+                i.setIndexValue(0, iActive[1], 1, iActive[3]);
+                break;
+        }
+        if (JSON.stringify(i.getIndexValue()) != JSON.stringify(iActive)) {
+            i.writeIndexValue();
+        }
     });
 });
