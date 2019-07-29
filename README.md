@@ -1,4 +1,4 @@
-# OpenCatWeb (v0.2)
+# OpenCatWeb (v0.3)
 > Web API for Petoi OpenCat Robotics
 
 This is an extension for Petoi OpenCat robotic kittens.
@@ -172,6 +172,11 @@ With the `/api/command/` you can send any command you like, also custom one's.
 
 
 ## Changelog
+> v0.3 - 2019-08-xx
+- API
+  - TBA
+- WEB
+  - TBA
 > v0.2 - 2019-07-29
 - API
   - Improve multiple request's behavior
