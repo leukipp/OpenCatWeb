@@ -42,7 +42,7 @@ window.ocw.Api = (host, port) => {
 window.ocw.Command = (command) => {
     let api = ocw.Api();
 
-    let _command = command;
+    let _command = command || '';
 
     let _setCommand = (command) => {
         _command = command ? command : _command;
@@ -100,8 +100,7 @@ window.ocw.move.M = (index, value) => {
     let _readValue = () => {
         let deferred = $.Deferred();
         api.status.j().done((data) => {
-            _setValue(data.status.j[index]);
-            deferred.resolve(_getValue());
+            deferred.resolve(_setValue(data.status.j[index]));
         });
         return deferred.promise();
     };
@@ -115,7 +114,39 @@ window.ocw.move.M = (index, value) => {
         readValue: _readValue
     };
 };
-window.ocw.move.I = () => { /* TODO */ };
+window.ocw.move.I = (...indexValue) => {
+    let api = ocw.Api();
+
+    let _indexValue = indexValue || [];
+
+    let _setIndexValue = (...indexValue) => {
+        _indexValue = Array.isArray(indexValue) && indexValue.length ? indexValue.map(iv => parseInt(iv)) : _indexValue;
+        return _indexValue;
+    };
+
+    let _getIndexValue = (index) => {
+        return Number.isInteger(index) ? _indexValue[index] : _indexValue;
+    };
+
+    let _writeIndexValue = (...indexValue) => {
+        return api.move.i(..._setIndexValue(...indexValue));
+    };
+
+    let _readIndexValue = () => {
+        let deferred = $.Deferred();
+        api.status.j().done((data) => {
+            deferred.resolve(_setIndexValue(...data.status.j));
+        });
+        return deferred.promise();
+    };
+
+    return {
+        setIndexValue: _setIndexValue,
+        getIndexValue: _getIndexValue,
+        writeIndexValue: _writeIndexValue,
+        readIndexValue: _readIndexValue
+    };
+};
 window.ocw.move.L = () => { /* TODO */ };
 
 window.ocw.stop = window.ocw.stop || (() => {});
@@ -130,7 +161,7 @@ window.ocw.status.J = () => {
     let _status = [];
 
     let _setStatus = (status) => {
-        _status = Array.isArray(status) ? status.map(s => parseInt(s)) : _status;
+        _status = Array.isArray(status) && status.length ? status.map(s => parseInt(s)) : _status;
         return _status;
     };
 
