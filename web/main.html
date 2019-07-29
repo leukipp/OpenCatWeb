@@ -6,42 +6,69 @@
     <title>OpenCatWeb</title>
     <link rel="icon" type="image/png" href="img/favicon.png" />
     <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/fa.solid.css" />
     <link rel="stylesheet" href="css/vue.slider.css" />
     <link rel="stylesheet" href="css/ocw.main.css" />
 </head>
 <body>
 <div id="app">
-    <div id="settings">
-        <div class="setting">
-            <input id="autoupdate" type="checkbox" ref="autoUpdate" v-model="autoUpdate" />
-            <label for="autoupdate">Auto update (experimental)</label>
-        </div>
-        <div class="setting">
-            <input id="lazyupdate" type="checkbox" ref="lazyUpdate" v-model="lazyUpdate" @change="lazyUpdateChange($event)" />
-            <label for="lazyupdate">Lazy update (experimental)</label>
-        </div>
+    <nav id="menu">
+      <input id="menu-open" type="checkbox" ref="menuOpen" v-model="menuOpen" />
+      <label class="menu-open-button" for="menu-open">
+        <span class="menu-line line-1"></span>
+        <span class="menu-line line-2"></span>
+        <span class="menu-line line-3"></span>
+      </label>
+      <a class="menu-item item-1" v-on:click="menuOpenPage(1)">
+        <i class="fas fa-cat"></i>
+      </a>
+      <a class="menu-item item-2" v-on:click="menuOpenPage(2)">
+        <i class="fas fa-paw"></i>
+      </a>
+      <a class="menu-item item-3" v-on:click="menuOpenPage(3)">
+        <i class="fas fa-ellipsis-h"></i>
+      </a>
+    </nav>
+    <div id="page-1" class="page" style="display: none;" v-show="page == 1">
+        <div id="nipple"></div>
     </div>
-    <div id="sliders">
-        <div :id="slider.mid" :class="slider.style" v-for="slider in sliders">
-            <div class="sync">
-                <input :id="slider.sid" type="checkbox" v-model="$data[slider.bid]['sync']" />
-                <label :for="slider.sid">{{ slider.name }}</label>
+    <div id="page-2" class="page" style="display: none;" v-show="page == 2">
+        <div id="settings">
+            <div class="setting">
+                <input id="autoupdate" type="checkbox" ref="autoUpdate" v-model="autoUpdate" />
+                <label for="autoupdate">Auto update (experimental)</label>
             </div>
-            <vue-slider
-                    :ref="slider.mid"
-                    v-bind="$data[slider.bid]"
-                    v-model="$data[slider.mid]"
-                    @change="change(slider.id)"
-                    @drag-start="dragstart(slider.id)"
-                    @drag-end="dragend(slider.id)">
-            </vue-slider>
+            <div class="setting">
+                <input id="lazyupdate" type="checkbox" ref="lazyUpdate" v-model="lazyUpdate" @change="lazyUpdateChange($event)" />
+                <label for="lazyupdate">Lazy update (experimental)</label>
+            </div>
+        </div>
+        <div id="sliders">
+            <div :id="slider.mid" :class="slider.style" v-for="slider in sliders">
+                <div class="sync">
+                    <input :id="slider.sid" type="checkbox" v-model="$data[slider.bid]['sync']" />
+                    <label :for="slider.sid">{{ slider.name }}</label>
+                </div>
+                <vue-slider
+                        :ref="slider.mid"
+                        v-bind="$data[slider.bid]"
+                        v-model="$data[slider.mid]"
+                        @change="change(slider.id)"
+                        @drag-start="dragstart(slider.id)"
+                        @drag-end="dragend(slider.id)">
+                </vue-slider>
+            </div>
+        </div>
+        <div id="commands">
+            <input class="command" type="input" placeholder="Send command..." ref="command" v-model="command" v-on:keyup.enter="commandWrite" />
         </div>
     </div>
-    <div id="commands">
-        <input class="command" type="input" placeholder="Send command..." ref="command" v-model="command" v-on:keyup.enter="commandWrite" />
+    <div id="page-3" class="page" style="display: none;" v-show="page == 3">
+        <span class="more">More to come...</span>
     </div>
 </div>
 <script src="js/jquery.min.js"></script>
+<script src="js/nipple.min.js"></script>
 <script src="js/vue.min.js"></script>
 <script src="js/vue.slider.min.js"></script>
 <script src="js/ocw.log.js"></script>
