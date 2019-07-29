@@ -335,6 +335,7 @@ height: 100%;
 }
 
 .joystick .front{
+cursor: pointer;
 opacity: 0.9 !important;
 }
 

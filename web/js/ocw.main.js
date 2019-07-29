@@ -257,7 +257,7 @@ j.readStatus().done((status) => {
     nipplejs.create($.extend(joystick, {
         zone: $('#left')[0],
         color: '#007acc'
-    })).on('move end', (e, data) => {
+    })).on('move, end', (e, data) => {
             let cActive = c.getCommand();
             let direction = data.direction ? data.direction.y + '|' + data.direction.angle : 'stop';
             switch (direction) {
@@ -287,12 +287,12 @@ j.readStatus().done((status) => {
                 c.writeCommand();
             }
     });
-    
+        
     let i = ocw.move.I(0, m[0].getValue(), 1, m[1].getValue());
     nipplejs.create($.extend(joystick, {
         zone: $('#right')[0],
         color: '#f0b400'
-    })).on('dir:up dir:down dir:left dir:right move end', (e, data) => {
+    })).on('dir:up, dir:down, dir:left, dir:right, move, end', (e, data) => {
             let iActive = i.getIndexValue();
             let step = parseInt(0.5 * (data.force ? data.force + 1 : 1));
             let direction = data.direction ? data.direction.y + '|' + data.direction.angle : 'stop';
