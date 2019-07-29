@@ -10,6 +10,12 @@ j.readStatus().done((status) => {
         el: '#app',
         data: () => {
             let data = {
+                page: 1,
+                menuOpen: false,
+                menuOpenPage: (page) => {
+                    vue.$data.page = page;
+                    vue.$data.menuOpen = false;
+                },
                 lazyUpdate: true,
                 lazyUpdateChange: () => {
                     m.forEach((item) => vue.$data['b' + item.getIndex()].lazy = vue.$data.lazyUpdate);
@@ -232,5 +238,41 @@ j.readStatus().done((status) => {
             'vueSlider': window['vue-slider-component'],
         }
     });
+
     vue.$data.autoUpdateRate(1000);
+
+    nipplejs.create({
+        zone: document.getElementById('nipple'),
+        mode: 'static',
+        position: {
+            left: '25%',
+            top: '50%'
+        },
+        color: 'red'
+    }).on('start dir:up dir:down dir:left dir:right move end', (e, data) => {
+            // TODO
+            let direction = data.direction ? data.direction.angle : 'stop';
+            let hPan = m[0].getValue();
+            let hTilt = m[1].getValue();
+            switch (direction) {
+                case 'up':
+                        m[1].setValue(++hTilt);
+                        break;
+                case 'down':
+                        m[1].setValue(--hTilt);
+                        break;
+                case 'left':
+                        m[0].setValue(++hPan);
+                        break;
+                case 'right':
+                        m[0].setValue(--hPan);
+                        break;
+            }
+            if (direction != 'stop') {
+                api.move.i(0, hPan, 1, hTilt);
+            }
+    }).on('move', (e, data) => {
+            // TODO
+            let distance = data.distance;
+    });
 });
