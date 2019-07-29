@@ -19,18 +19,34 @@
         <span class="menu-line line-2"></span>
         <span class="menu-line line-3"></span>
       </label>
-      <a class="menu-item item-1" v-on:click="menuOpenPage(1)">
+      <a class="menu-item item-1" v-on:click="menuOpenPage($event)">
         <i class="fas fa-cat"></i>
       </a>
-      <a class="menu-item item-2" v-on:click="menuOpenPage(2)">
+      <a class="menu-item item-2" v-on:click="menuOpenPage($event)">
         <i class="fas fa-paw"></i>
       </a>
-      <a class="menu-item item-3" v-on:click="menuOpenPage(3)">
+      <a class="menu-item item-3" v-on:click="menuOpenPage($event)">
         <i class="fas fa-ellipsis-h"></i>
       </a>
     </nav>
     <div id="page-1" class="page" style="display: none;" v-show="page == 1">
-        <div id="nipple"></div>
+        <div id="status"></div>
+        <div id="buttons">
+            <div class="button" :id="button.command" :ref="button.command" v-on:click="buttonCommand($event)" v-for="button in buttons">
+                <span class="name">{{ button.name }}</span>
+            </div>
+        </div>
+        <div id="controller">
+            <div class="actions">
+                <div id="d" class="action" v-on:click="actionCommand($event)">
+                    <i class="fas fa-power-off"></i>
+                </div>
+            </div>
+            <div class="joysticks">
+                <div id="left" class="joystick"></div>
+                <div id="right" class="joystick"></div>
+            </div>
+        </div>
     </div>
     <div id="page-2" class="page" style="display: none;" v-show="page == 2">
         <div id="settings">

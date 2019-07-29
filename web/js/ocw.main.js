@@ -6,15 +6,22 @@ let api = ocw.Api();
 let j = ocw.status.J();
 j.readStatus().done((status) => {
     let m = status.map((value, index) => ocw.move.M(index, value));
+    
     let vue = new Vue({
         el: '#app',
         data: () => {
             let data = {
                 page: 1,
                 menuOpen: false,
-                menuOpenPage: (page) => {
-                    vue.$data.page = page;
+                menuOpenPage: (e) => {
+                    vue.$data.page = parseInt($(e.target).closest('.menu-item').attr('class').split('-')[2]);
                     vue.$data.menuOpen = false;
+                },
+                buttonCommand: (e) => {
+                    ocw.Command(($(e.target).closest('.button').attr('id'))).writeCommand();                                       
+                },
+                actionCommand: (e) => {
+                    ocw.Command(($(e.target).closest('.action').attr('id'))).writeCommand();                                       
                 },
                 lazyUpdate: true,
                 lazyUpdateChange: () => {
@@ -42,13 +49,37 @@ j.readStatus().done((status) => {
                         ocw.Command(vue.$data.command).writeCommand();
                     }
                 },
+                buttons: [
+                    {
+                        name: 'Rest',
+                        command: 'krest'
+                    },
+                    {
+                        name: 'Sit',
+                        command: 'ksit'
+                    },                    
+                    {
+                        name: 'Stand',
+                        command: 'kbalance'
+                    },
+                    {
+                        name: 'Butt',
+                        command: 'kbuttUp'
+                    },
+                    {
+                        name: 'Pee',
+                        command: 'kpee'
+                    },
+                    {
+                        name: 'Stretch',
+                        command: 'kstr'
+                    }
+                ],
                 sliders: [
                     {
                         id: 0,
                         name: 'hPan',
                         direction: 'rtl',
-                        top: 10,
-                        left: 10,
                         min: -60,
                         max: 60
                     },
@@ -56,8 +87,6 @@ j.readStatus().done((status) => {
                         id: 1,
                         name: 'hTilt',
                         direction: 'rtl',
-                        top: 10,
-                        left: 10,
                         min: -80,
                         max: 50
                     },
@@ -65,8 +94,6 @@ j.readStatus().done((status) => {
                         id: 2,
                         name: 'tPan',
                         direction: 'rtl',
-                        top: 10,
-                        left: 10,
                         min: -60,
                         max: 60
                     },
@@ -74,8 +101,6 @@ j.readStatus().done((status) => {
                         id: 3,
                         name: 'N/A',
                         direction: 'rtl',
-                        top: 10,
-                        left: 10,
                         min: -60,
                         max: 60
                     },
@@ -83,8 +108,6 @@ j.readStatus().done((status) => {
                         id: 4,
                         name: 'rFL',
                         direction: 'rtl',
-                        top: 10,
-                        left: 10,
                         min: -60,
                         max: 60
                     },
@@ -92,8 +115,6 @@ j.readStatus().done((status) => {
                         id: 5,
                         name: 'rFR',
                         direction: 'rtl',
-                        top: 10,
-                        left: 10,
                         min: -60,
                         max: 60
                     },
@@ -101,8 +122,6 @@ j.readStatus().done((status) => {
                         id: 6,
                         name: 'rHR',
                         direction: 'rtl',
-                        top: 10,
-                        left: 10,
                         min: -60,
                         max: 60
                     },
@@ -110,8 +129,6 @@ j.readStatus().done((status) => {
                         id: 7,
                         name: 'rHL',
                         direction: 'rtl',
-                        top: 10,
-                        left: 10,
                         min: -60,
                         max: 60
                     },
@@ -119,8 +136,6 @@ j.readStatus().done((status) => {
                         id: 8,
                         name: 'sFL',
                         direction: 'rtl',
-                        top: 10,
-                        left: 10,
                         min: -60,
                         max: 60
                     },
@@ -128,8 +143,6 @@ j.readStatus().done((status) => {
                         id: 9,
                         name: 'sFR',
                         direction: 'rtl',
-                        top: 10,
-                        left: 10,
                         min: -60,
                         max: 60
                     },
@@ -137,8 +150,6 @@ j.readStatus().done((status) => {
                         id: 10,
                         name: 'sHR',
                         direction: 'rtl',
-                        top: 10,
-                        left: 10,
                         min: -60,
                         max: 60
                     },
@@ -146,8 +157,6 @@ j.readStatus().done((status) => {
                         id: 11,
                         name: 'sHL',
                         direction: 'rtl',
-                        top: 10,
-                        left: 10,
                         min: -60,
                         max: 60
                     },
@@ -155,8 +164,6 @@ j.readStatus().done((status) => {
                         id: 12,
                         name: 'kFL',
                         direction: 'rtl',
-                        top: 10,
-                        left: 10,
                         min: -60,
                         max: 60
                     },
@@ -164,8 +171,6 @@ j.readStatus().done((status) => {
                         id: 13,
                         name: 'kFR',
                         direction: 'rtl',
-                        top: 10,
-                        left: 10,
                         min: -60,
                         max: 60
                     },
@@ -173,8 +178,6 @@ j.readStatus().done((status) => {
                         id: 14,
                         name: 'kHR',
                         direction: 'rtl',
-                        top: 10,
-                        left: 10,
                         min: -60,
                         max: 60
                     },
@@ -182,8 +185,6 @@ j.readStatus().done((status) => {
                         id: 15,
                         name: 'kHL',
                         direction: 'rtl',
-                        top: 10,
-                        left: 10,
                         min: -60,
                         max: 60
                     }
@@ -208,6 +209,7 @@ j.readStatus().done((status) => {
                     vue.$set(vue.$refs.autoUpdate, 'checked', $(vue.$refs.autoUpdate).data('checked'));
                 }
             };
+            
             m.forEach((item) => {
                 let slider = data.sliders.filter(s => s.id == item.getIndex())[0];
                 data['m' + item.getIndex()] = item.getValue();
@@ -232,47 +234,93 @@ j.readStatus().done((status) => {
                         process: (p) => [[(Math.abs(slider.min) * 100 / (Math.abs(slider.min) + Math.abs(slider.max))), p[0]]]
                     });
             });
+            
             return data;
         },
         components: {
             'vueSlider': window['vue-slider-component'],
         }
     });
-
+    
     vue.$data.autoUpdateRate(1000);
 
-    nipplejs.create({
-        zone: document.getElementById('nipple'),
+    let joystick = {
+        size: 80,
         mode: 'static',
         position: {
-            left: '25%',
+            left: '50%',
             top: '50%'
-        },
-        color: 'red'
-    }).on('start dir:up dir:down dir:left dir:right move end', (e, data) => {
-            // TODO
-            let direction = data.direction ? data.direction.angle : 'stop';
-            let hPan = m[0].getValue();
-            let hTilt = m[1].getValue();
+        }
+    };
+    
+    let c = ocw.Command();
+    nipplejs.create($.extend(joystick, {
+        zone: $('#left')[0],
+        color: '#007acc'
+    })).on('move end', (e, data) => {
+            let cActive = c.getCommand();
+            let direction = data.direction ? data.direction.y + '|' + data.direction.angle : 'stop';
             switch (direction) {
-                case 'up':
-                        m[1].setValue(++hTilt);
+                case 'up|up':
+                        c.setCommand('ktr');
                         break;
-                case 'down':
-                        m[1].setValue(--hTilt);
+                case 'up|left':
+                        c.setCommand('kwkL');
                         break;
-                case 'left':
-                        m[0].setValue(++hPan);
+                case 'up|right':
+                        c.setCommand('kwkR');
                         break;
-                case 'right':
-                        m[0].setValue(--hPan);
+                case 'down|down':
+                        c.setCommand('kbk');
+                        break;
+                case 'down|left':
+                        c.setCommand('kbkL');
+                        break;
+                case 'down|right':
+                        c.setCommand('kbkR');
+                        break;
+                default:
+                        c.setCommand('kbalance');
                         break;
             }
-            if (direction != 'stop') {
-                api.move.i(0, hPan, 1, hTilt);
+            if (c.getCommand() != cActive) {
+                c.writeCommand();
             }
-    }).on('move', (e, data) => {
-            // TODO
-            let distance = data.distance;
+    });
+    
+    let i = ocw.move.I(0, m[0].getValue(), 1, m[1].getValue());
+    nipplejs.create($.extend(joystick, {
+        zone: $('#right')[0],
+        color: '#f0b400'
+    })).on('dir:up dir:down dir:left dir:right move end', (e, data) => {
+            let iActive = i.getIndexValue();
+            let step = parseInt(0.5 * (data.force ? data.force + 1 : 1));
+            let direction = data.direction ? data.direction.y + '|' + data.direction.angle : 'stop';
+            switch (direction) {
+                case 'up|up':
+                        i.setIndexValue(0, iActive[1], 1, iActive[3] + step);
+                        break;
+                case 'up|left':
+                        i.setIndexValue(0, iActive[1] + step, 1, iActive[3] + step);
+                        break;
+                case 'up|right':
+                        i.setIndexValue(0, iActive[1] - step, 1, iActive[3] + step);
+                        break;
+                case 'down|down':
+                        i.setIndexValue(0, iActive[1], 1, iActive[3] - step);
+                        break;
+                case 'down|left':
+                        i.setIndexValue(0, iActive[1] + step, 1, iActive[3] - step);
+                        break;
+                case 'down|right':
+                        i.setIndexValue(0, iActive[1] - step, 1, iActive[3] - step);
+                        break;
+                default:
+                        i.setIndexValue(0, iActive[1], 1, iActive[3]);
+                        break;
+            }
+            if (JSON.stringify(i.getIndexValue()) != JSON.stringify(iActive)) {
+                i.writeIndexValue();
+            }
     });
 });
