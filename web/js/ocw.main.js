@@ -189,7 +189,7 @@ j.readStatus().done((status) => {
                         max: 60
                     }
                 ],
-                change: function (index) {
+                change: (index) => {
                     let value = vue.$data['m' + index];
                     if (value != m[index].getValue()) {
                         m[index].writeValue(value);
