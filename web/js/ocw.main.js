@@ -137,27 +137,27 @@ j.readStatus().done((status) => {
                         name: 'sFL',
                         direction: 'rtl',
                         min: -60,
-                        max: 60
+                        max: 90
                     },
                     {
                         id: 9,
                         name: 'sFR',
                         direction: 'rtl',
                         min: -60,
-                        max: 60
+                        max: 90
                     },
                     {
                         id: 10,
                         name: 'sHR',
                         direction: 'rtl',
-                        min: -60,
+                        min: -90,
                         max: 60
                     },
                     {
                         id: 11,
                         name: 'sHL',
                         direction: 'rtl',
-                        min: -60,
+                        min: -90,
                         max: 60
                     },
                     {
@@ -192,11 +192,15 @@ j.readStatus().done((status) => {
                 change: (index) => {
                     let value = vue.$data['m' + index];
                     if (value != m[index].getValue()) {
-                        m[index].writeValue(value);
+                        let min = vue.$data['b' + index].min;
+                        let max = vue.$data['b' + index].max;
+                        m[index].writeValue(Math.max(min, Math.min(value, max)));
                         m.forEach((item) => {
                             let sync = vue.$data['b' + index].sync && vue.$data['b' + item.getIndex()].sync;
                             if (index != item.getIndex() && sync) {
-                                vue.$refs['m' + item.getIndex()][0].setValue(value);
+                                let min = vue.$data['b' + item.getIndex()].min;
+                                let max = vue.$data['b' + item.getIndex()].max;
+                                vue.$refs['m' + item.getIndex()][0].setValue(Math.max(min, Math.min(value, max)));
                             }
                         });
                     }
@@ -292,31 +296,35 @@ j.readStatus().done((status) => {
     nipplejs.create($.extend(joystick, {
         zone: $('#right')[0],
         color: '#f0b400'
-    })).on('dir:up, dir:down, dir:left, dir:right, move, end', (e, data) => {
+    })).on('move, end', (e, data) => {
         let iActive = i.getIndexValue();
-        let step = parseInt(0.5 * (data.force ? data.force + 1 : 1));
         let direction = data.direction ? data.direction.y + '|' + data.direction.angle : 'stop';
+        let force = data.force ? data.force / 2 : 0;
+        let left = Math.min(vue.$data['b0'].max, vue.$data['b0'].max * force);
+        let right = Math.max(vue.$data['b0'].min, vue.$data['b0'].min * force);
+        let up = Math.min(vue.$data['b1'].max, vue.$data['b1'].max * force);
+        let down = Math.max(vue.$data['b1'].min, vue.$data['b1'].min * force);
         switch (direction) {
             case 'up|up':
-                i.setIndexValue(0, iActive[1], 1, iActive[3] + step);
+                i.setIndexValue(0, iActive[1], 1, up);
                 break;
             case 'up|left':
-                i.setIndexValue(0, iActive[1] + step, 1, iActive[3] + step);
+                i.setIndexValue(0, left, 1, iActive[0]);
                 break;
             case 'up|right':
-                i.setIndexValue(0, iActive[1] - step, 1, iActive[3] + step);
+                i.setIndexValue(0, right, 1, iActive[0]);
                 break;
             case 'down|down':
-                i.setIndexValue(0, iActive[1], 1, iActive[3] - step);
+                i.setIndexValue(0, iActive[1], 1, down);
                 break;
             case 'down|left':
-                i.setIndexValue(0, iActive[1] + step, 1, iActive[3] - step);
+                i.setIndexValue(0, left, 1, iActive[0]);
                 break;
             case 'down|right':
-                i.setIndexValue(0, iActive[1] - step, 1, iActive[3] - step);
+                i.setIndexValue(0, right, 1, iActive[0]);
                 break;
             default:
-                i.setIndexValue(0, iActive[1], 1, iActive[3]);
+                i.setIndexValue(0, 0, 1, 0);
                 break;
         }
         if (JSON.stringify(i.getIndexValue()) != JSON.stringify(iActive)) {

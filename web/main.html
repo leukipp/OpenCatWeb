@@ -52,18 +52,18 @@
         <div id="settings">
             <div class="setting">
                 <input id="autoupdate" type="checkbox" ref="autoUpdate" v-model="autoUpdate" />
-                <label for="autoupdate">Auto update (experimental)</label>
+                <label for="autoupdate">Auto update</label>
             </div>
             <div class="setting">
                 <input id="lazyupdate" type="checkbox" ref="lazyUpdate" v-model="lazyUpdate" @change="lazyUpdateChange($event)" />
-                <label for="lazyupdate">Lazy update (experimental)</label>
+                <label for="lazyupdate">Lazy update</label>
             </div>
         </div>
         <div id="sliders">
             <div :id="slider.mid" :class="slider.style" v-for="slider in sliders">
                 <div class="sync">
                     <input :id="slider.sid" type="checkbox" v-model="$data[slider.bid]['sync']" />
-                    <label :for="slider.sid">{{ slider.name }}</label>
+                    <label :title="slider.id" :for="slider.sid">{{ slider.name }}</label>
                 </div>
                 <vue-slider
                         :ref="slider.mid"
