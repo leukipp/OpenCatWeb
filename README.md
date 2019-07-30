@@ -6,7 +6,7 @@ It offers a local running Web API for `GET` requests with `JSON` responses.
 
 There is also a simple web application with the following features included.
 - Control individual servo positions
-- Control walking mode with virtual joysticks
+- Control walking mode and head with virtual joysticks
 - Send commands by predefined buttons (like on IR remote control)
 - Send individual commands by text (like on serial terminal)
 
@@ -118,8 +118,6 @@ On the second page you are able to control each servo separately or together if 
 At the bottom you can send direct commands followed by the enter key.
 
 They are some experimental features that are not working satisfying at the moment because of limitation in the serial communication.
-- Head joystick
-  - Positions are changing only during movement and to much movement causes the head to twist
 - Auto update
   - If checked, updates from another page or movements from IR remote will be reflected here
 - Lazy update
@@ -165,18 +163,14 @@ With the `/api/command/` you can send any command you like, also custom one's.
   - Unauthenticated and unencrypted Web API (use it only in your private network)
   - No upper/lower bound value validations (know what you send)
 - WEB
-  - Moving multiple sliders at once breaks minimum/maximum limits
-  - Moving head joystick is not working properly
   - Experimental functions are lagging in time
   - Source code is uncommented
 
 
 ## Changelog
-> v0.3 - 2019-08-xx
-- API
-  - TBA
+> v0.3 - 2019-07-30
 - WEB
-  - TBA
+  - Add mimimum/maximum value validations
 > v0.2 - 2019-07-29
 - API
   - Improve multiple request's behavior
