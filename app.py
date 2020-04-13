@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 from flask import Flask, Response, jsonify
 from bus import Serial, SerialCommand
