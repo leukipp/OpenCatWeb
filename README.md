@@ -1,4 +1,4 @@
-# OpenCatWeb (v0.3)
+# OpenCatWeb (v1.0)
 > Web API for Petoi OpenCat Robotics
 
 This is an extension for Petoi OpenCat robotic kittens.

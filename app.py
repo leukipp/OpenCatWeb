@@ -1,21 +1,22 @@
 #!/usr/bin/python
 
-import cgi
-
-from flask import Flask, jsonify
+from flask import Flask, Response, jsonify
 from bus import Serial, SerialCommand
+from mic import Microphone
+from cam import Camera
+from html import escape
 
 HOST = '0.0.0.0'
-PORT = 8080
-DEBUG = False
+PORT = 8081
+DEBUG = True
 
-app = Flask(__name__, static_folder = 'web')
+app = Flask(__name__, static_folder='web')
 serial = Serial()
 
 
 @app.route('/')
 def root():
-    return links(['/web/', '/api/'], True)
+    return links(['/web/', '/api/', '/stream/'], True)
 
 
 @app.route('/web/')
@@ -118,8 +119,7 @@ def api_move_l_valueofindex(valueofindex):
     if len(args) == 16:
         return jsonify({'move': {'l': serial.write(SerialCommand('l', *args))}})
     else:
-        return links(['/api/move/l/%s%s<int:valueofindex15>' % (valueofindex, '/' if len(args) == 15 else '.../')],
-                     False)
+        return links(['/api/move/l/%s%s<int:valueofindex15>' % (valueofindex, '/' if len(args) == 15 else '.../')], False)
 
 
 @app.route('/api/stop/')
@@ -152,40 +152,66 @@ def api_status_j():
     return jsonify({'status': {'j': serial.write(SerialCommand('j'))}})
 
 
+@app.route('/stream/')
+def stream():
+    return links(['/stream/mic/', '/stream/cam/'], True)
+
+
+@app.route('/stream/mic/')
+def stream_mic():
+    return Response(Microphone().stream(), mimetype='audio/x-wav;codec=pcm')
+
+
+@app.route('/stream/mic/web/')
+def stream_mic_web():
+    return html('<div id="mic"><audio controls><source src="/stream/mic/" type="audio/x-wav;codec=pcm"></audio></div>')
+
+
+@app.route('/stream/cam/')
+def stream_cam():
+    return Response(Camera().stream(), mimetype='multipart/x-mixed-replace;boundary=frame')
+
+
+@app.route('/stream/cam/web/')
+def stream_cam_web():
+    return html('<div id="cam"><img src="/stream/cam/"></img></div>')
+
+
 def links(items, linked):
     ul = ['<ul>']
     for item in items:
         ul.append('<li>')
         if linked:
-            ul.append('<a href="%s">%s</a>' % (item, cgi.escape(item)))
+            ul.append('<a href="%s">%s</a>' % (item, escape(item)))
         else:
-            ul.append(cgi.escape(item))
+            ul.append(escape(item))
         ul.append('</li>')
     ul.append('</ul>')
     return html(''.join(ul))
 
 
 def html(body):
-    return ''.join(['<!DOCTYPE html>',
-                    '<html>',
-                    '<head>',
-                    '<meta charset="utf-8">',
-                    '<meta name="viewport" content="width=device-width,initial-scale=1.0">',
-                    '<title>OpenCatWeb</title>',
-                    '<link rel="icon" type="image/png" href="/web/img/favicon.png" />',
-                    '<link rel="stylesheet" href="/web/css/reset.css" />',
-                    '<link rel="stylesheet" href="/web/css/ocw.main.css" />',
-                    '</head>',
-                    '<body>',
-                    body,
-                    '</body>',
-                    '</html>'
-                    ])
+    return """
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset='utf-8'>
+            <meta name='viewport' content='width=device-width,initial-scale=1.0'>
+            <title>OpenCatWeb</title>
+            <link rel='icon' type='image/png' href='/web/img/favicon.png' />
+            <link rel='stylesheet' href='/web/css/reset.css' />
+            <link rel='stylesheet' href='/web/css/ocw.main.css' />
+        </head>
+        <body>
+            %s
+        </body>
+        </html>""" % body
 
 
 if __name__ == '__main__':
     app.run(
-        host = HOST,
-        port = PORT,
-        debug = DEBUG
+        host=HOST,
+        port=PORT,
+        debug=DEBUG,
+        threaded=True
     )
