@@ -7,8 +7,7 @@ from cam import Camera
 from html import escape
 
 HOST = '0.0.0.0'
-PORT = 8081
-DEBUG = True
+PORT = 8080
 
 app = Flask(__name__, static_folder='web')
 serial = Serial()
@@ -212,6 +211,6 @@ if __name__ == '__main__':
     app.run(
         host=HOST,
         port=PORT,
-        debug=DEBUG,
+        debug=False,
         threaded=True
     )
