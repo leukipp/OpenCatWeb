@@ -7,12 +7,12 @@
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
 # Short-Description: Start OpenCatWeb at boot time
-# Description:       Start flask webserver for OpenCatWeb
+# Description:       Start flask Webserver for OpenCatWeb
 ### END INIT INFO
 
 DAEMON=/home/pi/Projects/OpenCatWeb/app.py
 DAEMON_NAME=ocw
-DAEMON_USER=root
+DAEMON_USER=pi
 
 PIDFILE=/var/run/$DAEMON_NAME.pid
 . /lib/lsb/init-functions
